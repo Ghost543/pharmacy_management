@@ -1,0 +1,11 @@
+.toggle {
+    /*max-height: 0;*/
+    /*overflow: hidden;*/
+    transition: max-height0.5s, padding 0.5s;
+
+}
+
+/*.accord input[type="radio"]:checked + .label + .content {*/
+/*    max-height: 400px;*/
+/*    padding: 10px;*/
+/*}*/

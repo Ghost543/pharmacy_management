@@ -90,11 +90,11 @@ export const SalesLayout:FC<{ data: string }> = ( { data } ) => {
                                 <td className={`p-3 text-center`}>06/11/2023</td>
                             </tr>
                             <tr className={`bg-gray-800 rounded-md ease-in-out hover:shadow-sm hover:-translate-y-1 hover:-translate-x-1 cursor-pointer`}>
-                                <td className={`p-3 text-center`}>S12645_0989</td>
+                                <td className={`p-3 text-center`}>S12645_0989</td><div className={`w-2.5 h-2.5 rounded-full bg-blue-500`}></div>
                                 <td className={`p-3 text-center`}>762421_4354</td>
                                 <td className={`p-3 text-center`}>5,130,000</td>
                                 <td className={`p-3 text-center md:pl-11`}>
-                                    <div className={`w-2.5 h-2.5 rounded-full bg-blue-500`}></div>
+
                                 </td>
                                 <td className={`p-3 text-center`}>06/11/2023</td>
                             </tr>
