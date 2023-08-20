@@ -93,15 +93,15 @@ export const StockLayout:FC<{ data: string }> = ( { data } ) => {
 
                                             <StockModalTable />
                                             <div className={`w-full max-h-fit flex flex-row justify-end gap-4 p-2`}>
-                                        <span
-                                            onClick={ () => closeModal() }
-                                            className={`p-2 flex w-28 h-9 shadow-md hover:shadow-sm hover:translate-y-0.5 ease-in-out hover:text-gray-300 flex-row text-sm justify-center text-gray-400 items-center gap-1 rounded-md bg-gray-800/80 cursor-pointer`}>
-                                                Cancel
-                                        </span>
                                                 <span
+                                                    onClick={ () => closeModal() }
                                                     className={`p-2 flex w-28 h-9 shadow-md hover:shadow-sm hover:translate-y-0.5 ease-in-out hover:text-gray-300 flex-row text-sm justify-center text-gray-400 items-center gap-1 rounded-md bg-gray-800/80 cursor-pointer`}>
-                                                Add Stock
-                                        </span>
+                                                        Cancel
+                                                </span>
+                                                        <span
+                                                            className={`p-2 flex w-28 h-9 shadow-md hover:shadow-sm hover:translate-y-0.5 ease-in-out hover:text-gray-300 flex-row text-sm justify-center text-gray-400 items-center gap-1 rounded-md bg-gray-800/80 cursor-pointer`}>
+                                                        Add Stock
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

@@ -221,7 +221,7 @@ export const OrdersLayout:FC<{ data: string }> = ( { data } ) => {
                         <BiLeftArrowAlt /> Returned
                     </li>
                 </ul>
-                <div>
+                <div className={`w-full max-h-fit`}>
                     <OrdersTable headers={headers} body={tabOrders} />
                 </div>
                 <div></div>
