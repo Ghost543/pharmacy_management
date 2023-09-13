@@ -1,0 +1,8 @@
+# Ignore artifacts:
+build
+*.json
+coverage
+.pnp
+.pnp.js
+.next
+prisma

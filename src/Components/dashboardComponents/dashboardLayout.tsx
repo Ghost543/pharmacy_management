@@ -1,9 +1,5 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 
-export const DashboardLayout:FC<{ data: string }> = ( { data } ) => {
-    return (
-        <div>
-            { data }
-        </div>
-    );
+export const DashboardLayout: FC<{ data: string }> = ({ data }) => {
+    return <div>{data}</div>;
 };

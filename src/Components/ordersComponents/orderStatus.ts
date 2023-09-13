@@ -3,5 +3,5 @@ export enum OrderStatus {
     Cancelled,
     Taken,
     Pending,
-    Returned
+    Returned,
 }

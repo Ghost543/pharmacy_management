@@ -1,21 +1,36 @@
-import React, {FC} from 'react';
+import React, { FC } from "react";
 import Sidebar from "@/Components/sidebar";
-import {useTabContext} from "@/context/useTabContext";
-import {selector} from "@/utils/selector";
+import { useTabContext } from "@/context/useTabContext";
+import { selector } from "@/utils/selector";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import MainLayout from "@/Components/mainLayout";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { AddItemProvider } from "@/context/addItemDrawerContext";
+import { StockProvider } from "@/context/stockContext";
 
 const Dashboard: FC = () => {
-    const { tab } = useTabContext();
-    let tab_ = selector(tab);
+    const router = useRouter();
+
+    const { data: session } = useSession({
+        required: true,
+        onUnauthenticated() {
+            router.replace("/auth/signin?callbackUrl=/dashboard");
+        },
+    });
+
+    if (!session?.user) return;
+
     return (
-        <div className={`flex flex-row flex-grow h-full w-full gap-x-2 justify-between`}>
-            <div className={`w-1/6 min-h-screen `}>
-                <Sidebar />
-            </div>
-            <div className={`w-5/6 h-full`}>
-                { tab_ }
-            </div>
-        </div>
+        <>
+            <AddItemProvider>
+                <StockProvider>
+                    <MainLayout session={session} />
+                </StockProvider>
+            </AddItemProvider>
+        </>
     );
-}
+};
 
 export default Dashboard;

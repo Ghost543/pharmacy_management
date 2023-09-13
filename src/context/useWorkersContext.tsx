@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { TabContext } from "@/context/tabContext";
-import {WorkerContext} from "@/context/workersContext";
+import { WorkerContext } from "@/context/workersContext";
 
 export const useWorkersContext = () => {
     const context = useContext(WorkerContext);

@@ -2,10 +2,10 @@ export enum Role {
     Admin,
     Manager,
     Cashier,
-    Sales
-};
+    Sales,
+}
 
 export enum WorkerStatus {
     online,
-    offline
-};
+    offline,
+}

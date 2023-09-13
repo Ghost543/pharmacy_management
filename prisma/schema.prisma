@@ -1,0 +1,193 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type Contact {
+  tel   String
+  email String
+}
+
+type AgentContact {
+  tel   String?
+  email String?
+}
+
+enum Role {
+  Admin
+  Manager
+  Cashier
+  Sales
+}
+
+enum EmployeeStatus {
+  online
+  offline
+}
+
+model Employee {
+  id         String         @id @default(auto()) @map("_id") @db.ObjectId
+  name       String         @unique
+  age        Int
+  contact    Contact
+  salary     Int            @db.Long
+  role       Role
+  password   String
+  status     EmployeeStatus @default(offline)
+  start_date DateTime       @default(now())
+  orders     Order[]
+  invoices   Invoice[]
+  sales      Sale[]
+  stock      Stock[]
+}
+
+type Agent {
+  name    String?
+  contact AgentContact?
+}
+
+model Supplier {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  company_name String  @unique
+  contact      Contact
+  address      String
+  agent        Agent?
+  stock        Stock[]
+}
+
+model Stock {
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  stock_no             String    @unique
+  no_items             Int
+  quantity             Int
+  cost                 Int       @db.Long
+  date                 DateTime  @default(now())
+  items                Item[]
+  supplier             Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId           String?   @db.ObjectId
+  recieving_employee   Employee? @relation(fields: [recieving_employeeId], references: [id])
+  recieving_employeeId String?   @db.ObjectId
+}
+
+model Item {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  brand         String
+  serial_no     String
+  quantity      Int
+  selling_price Int      @db.Long
+  buying_price  Int      @db.Long
+  mfd           DateTime
+  exd           DateTime
+  stock         Stock    @relation(fields: [stockId], references: [id])
+  stockId       String   @db.ObjectId
+  order         Order[]  @relation(fields: [orderId], references: [id])
+  orderId       String[] @db.ObjectId
+
+  @@unique([stockId, serial_no, name])
+}
+
+enum OrderStatus {
+  Booked
+  Cancelled
+  Taken
+  Pending
+  Returned
+}
+
+type Company {
+  name    String
+  address String
+  contact Contact
+}
+
+model Client {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  contact  Contact
+  company  Company?
+  orders   Order[]
+  invoices Invoice[]
+}
+
+model Order {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  order_no   String      @unique
+  status     OrderStatus @default(Pending)
+  quantity   Int
+  amount     Int         @db.Long
+  date_time  DateTime    @default(now())
+  client     Client?     @relation(fields: [clientId], references: [id])
+  clientId   String?     @db.ObjectId
+  itemIds    String[]    @db.ObjectId
+  items      Item[]      @relation(fields: [itemIds], references: [id])
+  invoice    Invoice?
+  employee   Employee    @relation(fields: [employeeId], references: [id])
+  employeeId String      @db.ObjectId
+  sales      Sale[]
+}
+
+enum InvoiceStatus {
+  Paid
+  InstallmentPaid
+  UnPaid
+}
+
+model Invoice {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  invoice_no String        @unique
+  status     InvoiceStatus @default(UnPaid)
+  date_time  DateTime      @default(now())
+  clientId   String        @db.ObjectId
+  client     Client        @relation(fields: [clientId], references: [id])
+  order      Order         @relation(fields: [orderId], references: [id])
+  orderId    String        @unique @db.ObjectId
+  employee   Employee      @relation(fields: [employeeId], references: [id])
+  employeeId String        @db.ObjectId
+  sales      Sale[]
+}
+
+enum SaleType {
+  Order
+  Inovice
+}
+
+enum SaleStatus {
+  Complete
+  Installment
+}
+
+model Sale {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  sale_no    String     @unique
+  type       SaleType   @default(Order)
+  date_time  DateTime   @default(now())
+  amount     Int        @db.Long
+  status     SaleStatus @default(Complete)
+  employee   Employee   @relation(fields: [employeeId], references: [id])
+  employeeId String     @db.ObjectId
+  balance    Int        @default(0) @db.Long
+  order      Order      @relation(fields: [orderId], references: [id])
+  orderId    String     @unique @db.ObjectId
+  invoice    Invoice?   @relation(fields: [invoiceId], references: [id])
+  invoiceId  String?    @db.ObjectId
+  reciepts   Reciepts[]
+}
+
+model Reciepts {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  reciept_no  String    @unique
+  saleId      String    @db.ObjectId
+  sale        Sale      @relation(fields: [saleId], references: [id])
+  issued      Boolean   @default(false)
+  printed_on  DateTime?
+  print_count Int
+  timestamp   DateTime  @default(now())
+}
