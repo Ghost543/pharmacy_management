@@ -3,10 +3,15 @@ import { El_Messiri, Inconsolata, Teko } from "next/font/google";
 import { IoAddSharp, IoSearchSharp } from "react-icons/io5";
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import { OrderStatus } from "@/Components/ordersComponents/orderStatus";
-import { log } from "util";
+// import { log } from "util";
 import { OrderTableType } from "@/Components/ordersComponents/orderTableType";
 import { OrdersTable } from "@/Components/util_components/orders_table";
-import { StockModalTable } from "@/Components/util_components/stock_modal_table";
+// import { StockModalTable } from "@/Components/util_components/stock_modal_table";
+// import { Item } from "@/dtos/addStockDto.dto";
+import { ItemRouter } from "@/outputTypes/stock";
+import { ListOrderItemsModalTable } from "@/Components/ordersComponents/listOrderItems";
+import { trpc } from "@/utils/trpc";
+import { AddItem } from "@/Components/ordersComponents/addItem";
 
 const inconsolata = Inconsolata({
     weight: ["200", "400", "500", "700", "900"],
@@ -117,12 +122,35 @@ export const OrdersLayout: FC<{ data: string }> = ({ data }) => {
     const [orderTab, setOrderTab] = useState<string>("all");
     const [tabOrders, setTabOrders] = useState(orders);
     const [modal, setModal] = useState<boolean>(false);
+
+    const [orderItems, setOrderItems] = useState<
+        { item: ItemRouter; quantity: number }[]
+    >([]);
+
+    // const items = trpc.item.all.useQuery();
+
+    const [drawer, setDrawer] = useState<boolean>(false);
+
+    const addItem = (item: ItemRouter, quantity: number) => {
+        setOrderItems([...orderItems, { item, quantity }]);
+    };
+    const deleteItem = (item: ItemRouter) => {
+        let oo = [...orderItems];
+        let newoo = oo.filter(o => o.item.id !== item.id);
+        setOrderItems(newoo);
+    };
+
     const openModal = () => {
         setModal(true);
     };
     const closeModal = () => {
         setModal(false);
     };
+
+    // useEffect(() => {
+    //    const data = items.data;
+    //
+    // },[]);
 
     useEffect(() => {
         if (orderTab === "all") {
@@ -188,6 +216,7 @@ export const OrdersLayout: FC<{ data: string }> = ({ data }) => {
                                     <div
                                         className={`w-1/5 max-h-fit flex flex-row justify-end items-center`}>
                                         <span
+                                            onClick={() => setDrawer(true)}
                                             className={`p-2 flex w-28 h-9 shadow-md hover:shadow-sm hover:translate-y-0.5 ease-in-out hover:text-gray-300 flex-row text-sm justify-center text-gray-400 items-center gap-1 rounded-md bg-gray-800/80 cursor-pointer`}>
                                             <IoAddSharp
                                                 className={`text-lg text-gray-400`}
@@ -197,7 +226,7 @@ export const OrdersLayout: FC<{ data: string }> = ({ data }) => {
                                     </div>
                                 </div>
 
-                                <StockModalTable />
+                                <ListOrderItemsModalTable items={orderItems} />
                                 <div
                                     className={`w-full max-h-fit flex flex-row justify-end gap-4 p-2`}>
                                     <span
@@ -279,6 +308,12 @@ export const OrdersLayout: FC<{ data: string }> = ({ data }) => {
                     <OrdersTable headers={headers} body={tabOrders} />
                 </div>
                 <div></div>
+            </div>
+            <div
+                className={`absolute w-1/3 h-screen top-0 right-0 p-2 ${
+                    drawer ? "" : "hidden overflow-hidden"
+                }`}>
+                <AddItem cancel={setDrawer} />
             </div>
         </div>
     );

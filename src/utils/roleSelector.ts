@@ -10,8 +10,8 @@ export const RoleSelector = (role: Role | undefined) => {
             return "Cashier";
         case Role.Sales:
             return "Sales";
-        case undefined:
-            return "";
+        default:
+            throw new Error(`Invalid Role`);
     }
 };
 

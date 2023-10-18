@@ -103,14 +103,14 @@ enum OrderStatus {
 }
 
 type Company {
-  name    String
-  address String
-  contact Contact
+  name    String?
+  address String?
+  contact Contact?
 }
 
 model Client {
   id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
+  name     String    @unique
   contact  Contact
   company  Company?
   orders   Order[]
